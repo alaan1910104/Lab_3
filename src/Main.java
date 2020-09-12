@@ -63,7 +63,7 @@ public class Main extends Application {
 
 
         // set les dimensions u texte
-        tempscore.setTranslateX(width * 3);
+        tempscore.setTranslateX(200);
         score.setScaleY(1.5);
 
 
