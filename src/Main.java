@@ -25,18 +25,16 @@ public class Main extends Application {
     public void start(Stage pstage){
 
         // initialization
-
+        // Liste d'elements qui vont changer de label
         List<Labeled> lbld = new ArrayList<>();
 
-
-
-
+        // ini de label de scores et la quantite de score du dernier click
         Label score= new Label();
         lbld.add(score);
         Label tempscore = new Label();
         lbld.add(tempscore);
 
-
+        // ini des buttons
         Button btn = new Button("Clicky!");
         Button upgrd1 = new Button();
         lbld.add(upgrd1);
@@ -49,31 +47,30 @@ public class Main extends Application {
         Button upgrd5 = new Button();
         lbld.add(upgrd5);
 
-
+        // ini de click handler
         ClickHandler ch = new ClickHandler(lbld);
-
+        // assurance que les buttons ont de texte
         ch.updateText(true);
 
-
+        // group pour show
         Group root = new Group(btn, score, tempscore, upgrd1, upgrd2, upgrd3, upgrd4, upgrd5);
 
 
-
         // labels size
-        tempscore.setTranslateX(150);
-        score.setScaleY(1.5);
-
-
         int dif = 25;
         int height = 40;
         int width = 120;
 
-        //btn
+
+        // set les dimensions u texte
+        tempscore.setTranslateX(width * 3);
+        score.setScaleY(1.5);
+
+
+        //btn principal
         btn.setMinSize((width + 50), (5 * dif) + (5 * height));
         btn.setTranslateY(20);
-        btn.setOnAction(event -> {
-            ch.add();
-        });
+        btn.setOnAction(event -> { ch.add(); });
 
         // Upgrade 1
         upgrd1.setMinSize(width,height);
@@ -114,9 +111,10 @@ public class Main extends Application {
 
     public static void action(int btnumb, ClickHandler ch){
 
+        // faire le upgrade seulement si le usager a suficent clicks, sinon afficher une message.
+
         boolean reussi = ch.getClicks() >= ch.getCosts()[btnumb - 1];
         if(reussi){
-
             switch(btnumb){
                 case 1: ch.addClickAdd();
                 break;
@@ -129,7 +127,9 @@ public class Main extends Application {
                 case 5: ch.ultraClick();
                 break;
             }
+            // soustraire le cost
             ch.buy(ch.getCosts()[btnumb - 1]);
+            // augmerter le cost
             ch.getCosts()[btnumb - 1] = ch.getCosts()[btnumb - 1] * 2;
         }
         ch.updateText(reussi);

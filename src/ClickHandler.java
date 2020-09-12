@@ -12,13 +12,15 @@ public class ClickHandler {
     private int newclik;
     private int clickAdd;
     private int clickCombo;
-    private List<Labeled> lbld;
-    private Timeline tm1;
-    private Timeline tm2;
     private double duration1;
     private int clickssec;
     private int[] costs;
+    private List<Labeled> lbld;
+    private Timeline tm1;
+    private Timeline tm2;
 
+
+    // Constructeur
     public ClickHandler(List<Labeled> lbld){
         this.clicks = 0;
         this.newclik = 0;
@@ -28,16 +30,52 @@ public class ClickHandler {
         this.duration1 = 5;
         this.clickssec = 0;
 
+        // costs pour les 5 upgrades
         this.costs = new int[]{10, 20, 30, 40, 50};
 
+        // timeline pour les clicks automatiques
         this.tm1 = new Timeline();
         tm1.setCycleCount(Timeline.INDEFINITE);
         tm1.setAutoReverse(true);
+        // timeline pour les points/sec
         this.tm2 = new Timeline();
         tm2.setCycleCount(Timeline.INDEFINITE);
         tm2.setAutoReverse(true);
     }
 
+    // Augmenter les points
+    public void add(){
+        setNewclik();
+        this.clicks = this.clicks + this.newclik;
+        updateText(true);
+    }
+
+    // set le newclick pour montrer la quantite additioné dans le dernier click
+    public void setNewclik() {
+        this.newclik = (1 + this.clickAdd) * this.clickCombo;
+        this.lbld.get(1).setText( "  (+" + this.newclik + ")");
+    }
+
+    // augmenter par 1 le points per click
+    public void addClickAdd() {
+        this.clickAdd = clickAdd + 1;
+    }
+
+    // donner des points automatiquement
+    public void addClicksec(){
+        this.tm2.getKeyFrames().add(
+                new KeyFrame(Duration.seconds(1), event -> { this.clicks = this.clicks + this.clickssec; updateText(true);})
+        );
+        clickssec++;
+        this.tm2.play();
+    }
+
+    // donner une multiplicateur au points per click
+    public void addClickCombo() {
+        this.clickCombo = clickCombo + 1;
+    }
+
+    // faire un click automatiquement
     public void addClickAuto(){
 
         this.tm1.getKeyFrames().add(
@@ -47,20 +85,12 @@ public class ClickHandler {
         this.tm1.play();
     }
 
-    public void addClicksec(){
-        this.tm2.getKeyFrames().add(
-                new KeyFrame(Duration.seconds(1), event -> { this.clicks = this.clicks + this.clickssec; updateText(true);})
-        );
-        clickssec++;
-        this.tm2.play();
+    // donner une grose quantite de points per click
+    public void ultraClick(){
+        this.clickAdd = this.clickAdd + 10000;
     }
 
-    public void add(){
-        setNewclik();
-        this.clicks = this.clicks + this.newclik;
-        updateText(true);
-    }
-
+    // update le text pour le score et les buttons
     public void updateText(boolean possible){
         if(possible){
             this.lbld.get(0).setText("Clickys Clicked: " + this.clicks);
@@ -75,28 +105,18 @@ public class ClickHandler {
         }
     }
 
+    // soustraire le cost quand le usager achete un upgrade
     public void buy(int cost){
         this.clicks = this.clicks - cost;
         if(this.clicks < 0){ this.clicks = 0;}
         updateText(true);
     }
 
-    public void ultraClick(){
-        this.clickAdd = this.clickAdd + 10000;
-    }
+
+    // Getters
 
     public long getClicks() {
         return clicks;
-    }
-
-
-    public int getNewclik() {
-        return newclik;
-    }
-
-    public void setNewclik() {
-        this.newclik = (1 + this.clickAdd) * this.clickCombo;
-        this.lbld.get(1).setText( "  (+" + this.newclik + ")");
     }
 
     public int getClickAdd() {
@@ -107,15 +127,9 @@ public class ClickHandler {
         return costs;
     }
 
-    public void addClickAdd() {
-        this.clickAdd = clickAdd + 1;
-    }
-
     public int getClickCombo() {
         return clickCombo;
     }
 
-    public void addClickCombo() {
-        this.clickCombo = clickCombo + 1;
-    }
+
 }
